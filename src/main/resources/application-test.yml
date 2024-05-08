@@ -1,0 +1,32 @@
+# 测试配置文件
+# @author <a href="https://github.com/liyupi">qbw</a>
+# @from <a href="https://yupi.icu">编程导航知识星球</a>
+server:
+  port: 8101
+spring:
+  # 数据库配置
+  # todo 需替换配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/my_db
+    username: root
+    password: root
+  # Redis 配置
+  # todo 需替换配置
+  redis:
+    database: 1
+    host: 192.168.100.10
+    port: 6379
+    password: 123321
+    lettuce:
+      pool:
+        max-active: 10
+        max-idle: 10
+        min-idle: 1
+        time-between-eviction-runs: 10s
+  # Elasticsearch 配置
+  # todo 需替换配置
+  elasticsearch:
+    uris: http://192.168.100.10:9200
+    username: elastic
+    password: changeme
