@@ -2,6 +2,7 @@ package com.yupi.oj.controller;
 
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.gson.Gson;
 import com.yupi.oj.annotation.AuthCheck;
 import com.yupi.oj.common.BaseResponse;
 import com.yupi.oj.common.DeleteRequest;
@@ -10,12 +11,9 @@ import com.yupi.oj.common.ResultUtils;
 import com.yupi.oj.constant.UserConstant;
 import com.yupi.oj.exception.BusinessException;
 import com.yupi.oj.exception.ThrowUtils;
+import com.yupi.oj.model.dto.question.*;
 import com.yupi.oj.model.entity.Question;
 import com.yupi.oj.model.entity.User;
-import com.yupi.oj.model.dto.question.QuestionAddRequest;
-import com.yupi.oj.model.dto.question.QuestionEditRequest;
-import com.yupi.oj.model.dto.question.QuestionQueryRequest;
-import com.yupi.oj.model.dto.question.QuestionUpdateRequest;
 import com.yupi.oj.model.vo.QuestionVO;
 import com.yupi.oj.service.QuestionService;
 import com.yupi.oj.service.UserService;
@@ -44,6 +42,8 @@ public class QuestionController {
     @Resource
     private UserService userService;
 
+    private final static Gson GSON = new Gson();
+
     // region 增删改查
 
     /**
@@ -63,6 +63,14 @@ public class QuestionController {
         List<String> tags = questionAddRequest.getTags();
         if (tags != null) {
             question.setTags(JSONUtil.toJsonStr(tags));
+        }
+        List<JudgeCase> judgeCase = questionAddRequest.getJudgeCase();
+        if (judgeCase != null) {
+            question.setJudgeCase(GSON.toJson(judgeCase));
+        }
+        JudgeConfig judgeConfig = questionAddRequest.getJudgeConfig();
+        if (judgeConfig != null) {
+            question.setJudgeConfig(GSON.toJson(judgeConfig));
         }
         questionService.validQuestion(question, true);
         User loginUser = userService.getLoginUser(request);
@@ -117,6 +125,14 @@ public class QuestionController {
         List<String> tags = questionUpdateRequest.getTags();
         if (tags != null) {
             question.setTags(JSONUtil.toJsonStr(tags));
+        }
+        List<JudgeCase> judgeCase = questionUpdateRequest.getJudgeCase();
+        if (judgeCase != null) {
+            question.setJudgeCase(GSON.toJson(judgeCase));
+        }
+        JudgeConfig judgeConfig = questionUpdateRequest.getJudgeConfig();
+        if (judgeConfig != null) {
+            question.setJudgeConfig(GSON.toJson(judgeConfig));
         }
         // 参数校验
         questionService.validQuestion(question, false);
@@ -222,6 +238,14 @@ public class QuestionController {
         List<String> tags = questionEditRequest.getTags();
         if (tags != null) {
             question.setTags(JSONUtil.toJsonStr(tags));
+        }
+        List<JudgeCase> judgeCase = questionEditRequest.getJudgeCase();
+        if (judgeCase != null) {
+            question.setJudgeCase(GSON.toJson(judgeCase));
+        }
+        JudgeConfig judgeConfig = questionEditRequest.getJudgeConfig();
+        if (judgeConfig != null) {
+            question.setJudgeConfig(GSON.toJson(judgeConfig));
         }
         // 参数校验
         questionService.validQuestion(question, false);
