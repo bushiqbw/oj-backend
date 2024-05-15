@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yupi.oj.common.ErrorCode;
 import com.yupi.oj.constant.CommonConstant;
 import com.yupi.oj.exception.BusinessException;
+import com.yupi.oj.judge.JudgeService;
 import com.yupi.oj.model.dto.questionsubmit.QuestionSubmitAddRequest;
 import com.yupi.oj.model.dto.questionsubmit.QuestionSubmitQueryRequest;
 import com.yupi.oj.model.entity.Question;
@@ -19,12 +20,15 @@ import com.yupi.oj.service.QuestionSubmitService;
 import com.yupi.oj.mapper.QuestionSubmitMapper;
 import com.yupi.oj.service.UserService;
 import com.yupi.oj.utils.SqlUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import javax.annotation.Resource;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.List;
 
@@ -43,6 +47,10 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
 
     @Resource
     private UserService userService;
+
+    @Resource
+    @Lazy
+    private JudgeService judgeService;
 
 
     /**
@@ -78,7 +86,13 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         if(!saved){
             throw new BusinessException(ErrorCode.SYSTEM_ERROR,"数据插入失败！");
         }
-        return questionSubmit.getId();
+        Long questionSubmitId = questionSubmit.getId();
+        // 执行判题服务
+        CompletableFuture.runAsync(() -> {
+            judgeService.doJudge(questionSubmitId);
+        });
+        return questionSubmitId;
+
     }
 
     /**

@@ -101,3 +101,6 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.yupi.oj.controller
+#代码沙箱配置
+codesandbox:
+  type:example
