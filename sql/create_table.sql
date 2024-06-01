@@ -1,6 +1,6 @@
 # 数据库初始化
-# @author <a href="https://github.com/liyupi">qbw</a>
-# @from <a href="https://yupi.icu">编程导航知识星球</a>
+# @author <a href="https://github.com/liqbw">qbw</a>
+# @from <a href="https://qbw.icu">编程导航知识星球</a>
 
 -- 创建库
 create database if not exists my_OJ;

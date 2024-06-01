@@ -1,6 +1,6 @@
 # 公共配置文件
-# @author <a href="https://github.com/liyupi">qbw</a>
-# @from <a href="https://yupi.icu">编程导航知识星球</a>
+# @author <a href="https://github.com/liqbw">qbw</a>
+# @from <a href="https://qbw.icu">编程导航知识星球</a>
 spring:
   application:
     name: oj-backend
@@ -100,7 +100,7 @@ knife4j:
       default:
         api-rule: package
         api-rule-resources:
-          - com.yupi.oj.controller
+          - com.qbw.oj.controller
 #代码沙箱配置
 codesandbox:
   type: remote
