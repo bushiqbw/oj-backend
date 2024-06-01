@@ -1,6 +1,6 @@
 package com.yupi.oj.judge.strategy;
 
-import com.yupi.oj.model.dto.questionsubmit.JudgeInfo;
+import com.yupi.oj.judge.codesandbox.model.JudgeInfo;
 
 /**
  * 判题策略接口

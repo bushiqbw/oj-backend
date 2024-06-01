@@ -10,7 +10,7 @@ import com.yupi.oj.judge.codesandbox.model.ExecuteCodeRequest;
 import com.yupi.oj.judge.codesandbox.model.ExecuteCodeResponse;
 import com.yupi.oj.judge.strategy.JudgeContext;
 import com.yupi.oj.model.dto.question.JudgeCase;
-import com.yupi.oj.model.dto.questionsubmit.JudgeInfo;
+import com.yupi.oj.judge.codesandbox.model.JudgeInfo;
 import com.yupi.oj.model.entity.Question;
 import com.yupi.oj.model.entity.QuestionSubmit;
 import com.yupi.oj.model.enums.QuestionSubmitStatusEnum;
@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +35,7 @@ public class JudgeServiceImpl implements JudgeService {
     @Resource
     private JudgeManager judgeManager;
 
-    @Value("${codesandbox.type:example}")
+    @Value("${codesandbox.type}")
     private String type;
 
 
