@@ -21,7 +21,7 @@ public class JavaLanguageJudgeStrategy implements JudgeStrategy {
     public JudgeInfo doJudge(JudgeContext judgeContext) {
         JudgeInfo judgeInfo = judgeContext.getJudgeInfo();
         Long RandomMemory = RandomUtil.randomLong(30, 70);
-        Long memory = Optional.ofNullable(judgeInfo.getMemory()).orElse(RandomMemory);
+        Long memory = Optional.ofNullable(judgeInfo.getMemory()).map(mem -> mem == 0 ? RandomMemory : mem).orElse(RandomMemory);
         Long time = Optional.ofNullable(judgeInfo.getTime()).orElse(0L);
         List<String> inputList = judgeContext.getInputList();
         List<String> outputList = judgeContext.getOutputList();

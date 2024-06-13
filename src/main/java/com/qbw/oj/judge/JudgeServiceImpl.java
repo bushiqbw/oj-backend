@@ -1,11 +1,12 @@
 package com.qbw.oj.judge;
 
-import cn.hutool.json.JSONUtil;
+import  cn.hutool.json.JSONUtil;
 import com.qbw.oj.common.ErrorCode;
 import com.qbw.oj.judge.codesandbox.CodeSandbox;
 import com.qbw.oj.judge.codesandbox.CodeSandboxFactory;
 import com.qbw.oj.judge.codesandbox.model.ExecuteCodeRequest;
 import com.qbw.oj.model.entity.Question;
+import com.qbw.oj.model.enums.JudgeInfoMessageEnum;
 import com.qbw.oj.service.QuestionService;
 import com.qbw.oj.exception.BusinessException;
 import com.qbw.oj.judge.codesandbox.CodeSandboxProxy;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,6 +82,21 @@ public class JudgeServiceImpl implements JudgeService {
                 .inputList(inputList)
                 .build();
         ExecuteCodeResponse executeCodeResponse = codeSandbox.executeCode(executeCodeRequest);
+        //先检查是否运行成功了，如果错误直接不用检查outputlist了，返回编译错误
+        if(executeCodeResponse.getStatus() == QuestionSubmitStatusEnum.FAILED.getValue()){
+            JudgeInfo ErrorJudgeInfo = executeCodeResponse.getJudgeInfo();
+            ErrorJudgeInfo.setMessage(JudgeInfoMessageEnum.COMPILE_ERROR.getValue());
+            QuestionSubmit questionSubmitErrorUpdate = new QuestionSubmit();
+            questionSubmitErrorUpdate.setId(questionSubmitId);
+            questionSubmitErrorUpdate.setStatus(QuestionSubmitStatusEnum.FAILED.getValue());
+            questionSubmitErrorUpdate.setJudgeInfo(JSONUtil.toJsonStr(ErrorJudgeInfo));
+            boolean ErrorUpdate = questionSubmitService.updateById(questionSubmitErrorUpdate);
+            if (!ErrorUpdate) {
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR, "题目编译错误");
+            }
+            QuestionSubmit questionSubmitErrorResult = questionSubmitService.getById(questionId);
+            return questionSubmitErrorResult;
+        }
         List<String> outputList = executeCodeResponse.getOutputList();
         //根据沙箱返回结果，设置题目的判题状态和信息
         JudgeContext judgeContext = new JudgeContext();
@@ -89,6 +106,9 @@ public class JudgeServiceImpl implements JudgeService {
         judgeContext.setJudgeCaseList(judgeCaseList);
         judgeContext.setQuestion(question);
         judgeContext.setQuestionSubmit(questionSubmit);
+//        CompletableFuture.runAsync(()->{
+//            JudgeInfo judgeInfo = judgeManager.doJudge(judgeContext);
+//        });
         JudgeInfo judgeInfo = judgeManager.doJudge(judgeContext);
         //修改数据库中的判题结果
         questionSubmitUpdate = new QuestionSubmit();

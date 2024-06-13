@@ -6,7 +6,7 @@
 create database if not exists my_OJ;
 
 -- 切换库
-use my_OJ;
+use my_db;
 
 -- 用户表
 create table if not exists user
@@ -23,7 +23,7 @@ create table if not exists user
     createTime   datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
     updateTime   datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     isDelete     tinyint      default 0                 not null comment '是否删除',
-    index idx_unionId (unionId)
+    INDEX idx_userAccount  (userAccount)
 ) comment '用户' collate = utf8mb4_unicode_ci;
 
 -- 题目表
@@ -62,6 +62,39 @@ create table if not exists question_submit
     index idx_postId (questionId),
     index idx_userId (userId)
 ) comment '题目提交';
+
+-- auto-generated definition
+create table question_comment
+(
+    id          bigint                                     not null comment '主键id'
+        primary key,
+    questionId  bigint           default 0                 not null comment '问题id',
+    userId      bigint           default 0                 not null comment '用户id',
+    userName    varchar(50)                                null comment '用户昵称',
+    userAvatar  varchar(255)                               null comment '用户头像',
+    content     varchar(500)                               null comment '评论内容',
+    parentId    bigint           default -1                null comment '父级评论id
+',
+    commentNum  int              default 0                 null comment '回复条数',
+    likeCount   int              default 0                 null comment '点赞数量',
+    isLike      tinyint(1)       default 0                 null comment '是否点赞',
+    likeListId  varchar(255)                               null comment '点赞id列表',
+    inputShow   tinyint(1)       default 0                 null comment '是否显示输入框',
+    fromId      bigint                                     null comment '回复记录id
+',
+    fromName    varchar(255) collate utf8mb4_bin           null comment '回复人名称
+',
+    gmtCreate   datetime         default CURRENT_TIMESTAMP not null comment '创建时间',
+    gmtModified datetime         default CURRENT_TIMESTAMP not null comment '更新时间',
+    isDeleted   tinyint unsigned default '0'               not null comment '逻辑删除 1（true）已删除， 0（false）未删除'
+) comment '评论' collate = utf8mb4_general_ci
+                   row_format = DYNAMIC;
+
+create index idx_questionId
+    on question_comment (questionId);
+
+create index idx_userId
+    on question_comment (userId);
 
 -- 帖子收藏表（硬删除）
 create table if not exists post_favour
