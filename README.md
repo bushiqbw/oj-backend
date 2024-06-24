@@ -1,4 +1,4 @@
-# SpringBoot 项目初始模板
+# 基于SpringBoot 项目初始模板的在线OJ项目
 
 > 作者：[qbw](https://github.com/bushiqbw)
 
