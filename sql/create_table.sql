@@ -3,7 +3,7 @@
 # @from <a href="https://qbw.icu">编程导航知识星球</a>
 
 -- 创建库
-create database if not exists my_OJ;
+create database if not exists my_db;
 
 -- 切换库
 use my_db;
