@@ -3,11 +3,14 @@ package com.qbw.oj.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qbw.oj.RabbitMq.MyMessageProducer;
 import com.qbw.oj.common.ErrorCode;
+import com.qbw.oj.constant.MqConstant;
 import com.qbw.oj.judge.JudgeService;
 import com.qbw.oj.mapper.QuestionSubmitMapper;
 import com.qbw.oj.model.dto.questionsubmit.QuestionSubmitAddRequest;
 import com.qbw.oj.model.entity.Question;
+import com.qbw.oj.model.vo.QuestionVO;
 import com.qbw.oj.service.QuestionService;
 import com.qbw.oj.service.QuestionSubmitService;
 import com.qbw.oj.constant.CommonConstant;
@@ -28,6 +31,7 @@ import javax.annotation.Resource;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.List;
@@ -51,6 +55,9 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     @Resource
     @Lazy
     private JudgeService judgeService;
+
+    @Resource
+    private MyMessageProducer myMessageProducer;
 
 
     /**
@@ -88,9 +95,11 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         }
         Long questionSubmitId = questionSubmit.getId();
         // 执行判题服务
-        CompletableFuture.runAsync(() -> {
-            judgeService.doJudge(questionSubmitId);
-        });
+//        CompletableFuture.runAsync(() -> {
+//            judgeService.doJudge(questionSubmitId);
+//        });
+        // 异步调用判题服务
+        myMessageProducer.sendMessage(MqConstant.DIRECT_EXCHANGE, "oj", String.valueOf(questionSubmitId));
         return questionSubmitId;
 
     }
@@ -134,6 +143,9 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
     @Override
     public QuestionSubmitVO getQuestionSubmitVO(QuestionSubmit questionSubmit, User loginUser) {
         QuestionSubmitVO questionSubmitVO = QuestionSubmitVO.objToVo(questionSubmit);
+        Question question = questionService.getById(questionSubmit.getQuestionId());
+        questionSubmitVO.setQuestionVO(QuestionVO.objToVo(question));
+        questionSubmitVO.setUserVO(userService.getUserVO(loginUser));
         // 脱敏：仅本人和管理员能看见自己（提交 userId 和登录用户 id 不同）提交的代码
         long userId = loginUser.getId();
         // 处理脱敏
@@ -158,6 +170,15 @@ public class QuestionSubmitServiceImpl extends ServiceImpl<QuestionSubmitMapper,
         return questionSubmitVOPage;
     }
 
+    @Override
+    public List<QuestionSubmitVO> getQuestionSubmitVOList(List<QuestionSubmit> questionSubmitList, User loginUser) {
+        ArrayList<QuestionSubmitVO> questionSubmitListVo = new ArrayList<>();
+        questionSubmitList.forEach(questionSubmit -> {
+            QuestionSubmitVO questionSubmitVO = getQuestionSubmitVO(questionSubmit, loginUser);
+            questionSubmitListVo.add(questionSubmitVO);
+        });
+        return questionSubmitListVo;
+    }
 
 }
 
