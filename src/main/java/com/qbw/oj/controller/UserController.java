@@ -45,8 +45,7 @@ import static com.qbw.oj.service.impl.UserServiceImpl.SALT;
 /**
  * 用户接口
  *
- * @author <a href="https://github.com/liqbw">qbw</a>
-  
+ * @author <a href="https://github.com/bushiqbw">qbw</a>
  */
 @RestController
 @RequestMapping("/user")
