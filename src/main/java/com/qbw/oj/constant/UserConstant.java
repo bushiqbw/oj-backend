@@ -30,5 +30,8 @@ public interface UserConstant {
      */
     String BAN_ROLE = "ban";
 
+    String DEFAULT_AVATAR = "https://你自己的COS/OJ_Avatar.jpg";
+
+    String DEFAULT_USERNAME = "做题家-"+String.valueOf(System.currentTimeMillis()).substring(0,5);
     // endregion
 }

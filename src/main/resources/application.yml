@@ -24,20 +24,25 @@ spring:
     url: jdbc:mysql://localhost:3306/my_db
     username: root
     password: root
+  rabbitmq:
+    host: localhost
+    port: 5672
+    password: guest
+    username: guest
   # Redis 配置
   # todo 需替换配置，然后取消注释
   redis:
-    database: 1
-    host: 0.0.0.0
+    database: 0
+    host: 127.0.0.1
     port: 6379
     timeout: 5000
-#    password: 123456
+  #    password: 123456
   # Elasticsearch 配置
   # todo 需替换配置，然后取消注释
-#  elasticsearch:
-#    uris: http://localhost:9200
-#    username: root
-#    password: 123456
+  #  elasticsearch:
+  #    uris: http://localhost:9200
+  #    username: root
+  #    password: 123456
   # 文件上传
   servlet:
     multipart:
@@ -86,10 +91,10 @@ wx:
 # todo 需替换配置
 cos:
   client:
-    accessKey: xxx
-    secretKey: xxx
-    region: xxx
-    bucket: xxx
+    accessKey: 一定要替换！！！
+    secretKey: 一定要替换！！！
+    region: 一定要替换！！！
+    bucket: 一定要替换！！！
 # 接口文档配置
 knife4j:
   enable: true

@@ -18,6 +18,11 @@ class CosManagerTest {
 
     @Test
     void putObject() {
-        cosManager.putObject("test", "test.json");
+        cosManager.putObject("test", "D:\\IdeaProjects\\oj-backend\\src\\test\\java\\com\\qbw\\oj\\manager\\test.json");
+    }
+
+    @Test
+    void putImage(){
+        cosManager.putObject("Default_Avatar","D:\\IdeaProjects\\oj-backend\\src\\test\\java\\com\\qbw\\oj\\manager\\OJ_Avatar.jpg");
     }
 }
