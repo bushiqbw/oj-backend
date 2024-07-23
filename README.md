@@ -119,6 +119,11 @@ spring:
 ```java
 @SpringBootApplication
 ```
+### 腾讯云COS对象存储
+
+1） 修改application.yml中cos.client设置为自己的存储桶
+2） 修改UserConstant类中的DEFAULT_AVATAR地址
+3） 修改FileConstant类中的COS_HOST为自己的COS访问地址
 
 ### Elasticsearch 搜索引擎（该OJ项目没有用到ES，可以不用设置）
 
