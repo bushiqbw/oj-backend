@@ -2,9 +2,8 @@
 
 > 作者：[qbw](https://github.com/bushiqbw)
 
-基于鱼皮大佬提供的 Java SpringBoot 项目初始模板，整合了常用框架和主流业务的示例代码，在此基础上快速开发自己的项目。
+## 详情请移步 [语雀文档](https://www.yuque.com/u37646508/laqt1e/cpbs3p8w12w5xv95)
 
-[toc]
 
 ## 模板特点
 
